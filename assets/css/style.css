@@ -13,8 +13,8 @@ p {
 }
 
 .custom-jumbotron {
-    background:linear-gradient(0deg, #ff00964d, #ff00964d), url(../images/Cloud-100s-1084px.svg);
-    background-size:cover;
+    background: linear-gradient(0deg, #ff00964d, #ff00964d), url(../images/Cloud-100s-1084px.svg);
+    background-size: cover;
     background-position: center;
     color: white;
     height: 300px;
@@ -37,22 +37,40 @@ p {
     float: right;
 }
 
+input {
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .card {
     margin: 10px;
+    border-color: white!important;
+}
+
+#results-today {
+    align-items: center;
+}
+
+#weather-details {
+    width: 65%
+}
+
+#city-name {
+    text-transform:capitalize;
 }
 
 .custom-btn {
-    background-color: #4D002D!important;
-    color: white!important;
+    background-color: #4D002D !important;
+    color: white !important;
 }
 
 .searched-btns {
-    background-color: #4D002D!important;
-    color: white!important;
+    background-color: #4D002D !important;
+    color: white !important;
 }
 
 .modal {
-    top: 140px!important;
+    top: 140px !important;
 }
 
 .modal-header {
@@ -62,4 +80,17 @@ p {
 
 #modalText {
     font-size: 20px;
+}
+
+#city-name {
+    margin-top: 10px;
+}
+
+.display-block {
+    width: 155px!important;
+    margin: -25px 0 -20px 0!important;
+}
+.col {
+    display: flex;
+    flex-direction: column;
 }
