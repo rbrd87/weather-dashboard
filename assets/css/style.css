@@ -3,7 +3,7 @@ body {
 }
 
 p {
-    padding: 0;
+    padding: 5px;
     margin: 0 !important;
 }
 
@@ -44,4 +44,22 @@ p {
 .custom-btn {
     background-color: #4D002D!important;
     color: white!important;
+}
+
+.searched-btns {
+    background-color: #4D002D!important;
+    color: white!important;
+}
+
+.modal {
+    top: 140px!important;
+}
+
+.modal-header {
+    background-color: #4D002D;
+    color: white;
+}
+
+#modalText {
+    font-size: 20px;
 }
