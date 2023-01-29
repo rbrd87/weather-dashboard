@@ -14,13 +14,10 @@
 
 <body>
   <header class="jumbotron jumbotron-fluid custom-jumbotron text-center">
-    <p id="sig">Made with 🤍 by Rochelle</p>
+    <a href="https://github.com/rbrd87"><p id="sig">Made with 🤍 by Rochelle</p></a>
     <div class="container">
-      <h1 class="display-4">Weather Dashboard</h1>
-      <p class="lead">
-        Search below to find the current weather and five day forecast for
-        your selected city
-      </p>
+      <h1 class="display-2">Weather Dashboard</h1>
+      <p class="lead"> Search below to find the current weather and five day forecast for your selected city</p>
     </div>
   </header>
 
@@ -32,10 +29,12 @@
             <input id="search-input" class="form-input" type="text" placeholder="Enter city here" />
             <button class="btn custom-btn" id="search-btn">Search</button>
           </div>
-          <div class="card">
-            <p id="saved-cities">
-              Previous Searches:
-            </p>
+          <div class="card" id="cities-list">
+            <p>Previous Searches:</p>
+            <div id="city-list" class="list-group list-group-flush">
+              <!--location of city search history--->
+  
+            </div>
             <button class="btn custom-btn" id="clear-btn">Clear Results</button>
           </div>
         </div>

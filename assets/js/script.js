@@ -1,173 +1,185 @@
 // Base64 encoded the API key
-const encodedApiKey = 'NmQ3YzQ1NmNkY2M0ZTU5MWI1YjJiMWRiZWJlODY4MmI=';
+const encodedApiKey = "NmQ3YzQ1NmNkY2M0ZTU5MWI1YjJiMWRiZWJlODY4MmI=";
 const decodedApiKey = atob(encodedApiKey);
-console.log(decodedApiKey)
 
-// When search button is clicked, the function is called
-$('#search-btn').on('click', function (event) {
-    event.preventDefault();
-    // Store the users input into a variable
-    let citySearch = $('#search-input').val();
+// Localstorage json.parse to Get the stored items
+let savedSearch = JSON.parse(localStorage.getItem("ForecastHistory")) || [];
 
-    // If the search is invalid an error modal is show, otherwise the function carries on
-    if (!citySearch.trim()) {
-        $('#errorModal').modal('show')
-    } else {
-        // First we store the coordinates URL in a variable using the users input within the URL
-        const coordURL =
-            'https://api.openweathermap.org/geo/1.0/direct?q=' +
-            citySearch +
-            '&limit=25&appid=' +
+// For loop to show the saved searches from the local storage
+for (let i = 0; i < savedSearch.length; i++) {
+    let cityBtn = $(`<button class="btn btn-light btn-list" data-city="${savedSearch[i]}">${savedSearch[i]}</button>`);
+    $("#city-list").append(cityBtn);
+}
+
+// Created a function to be called later
+function weatherDisplay(city) {
+    // Coordinates URL is made from the users input and the apiKey
+    const coordURL =
+        "https://api.openweathermap.org/geo/1.0/direct?q=" +
+        city +
+        "&limit=25&appid=" +
+        decodedApiKey;
+    $.ajax({
+        url: coordURL,
+        method: "GET",
+    }).then(function (cityCoords) {
+        const latitude = cityCoords[0].lat;
+        const longitude = cityCoords[0].lon;
+
+        const queryURL =
+            "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+            latitude +
+            "&lon=" +
+            longitude +
+            "&exclude=minutely,hourly&appid=" +
             decodedApiKey;
-
-        // Then we call the coordinates URL
         $.ajax({
-            url: coordURL,
-            method: 'GET',
-        }).then(function (cityCoords) {
-            console.log(cityCoords)
-            // And store the longitude and latitude of the users city
-            const latitude = cityCoords[0].lat;
-            const longitude = cityCoords[0].lon;
+            url: queryURL,
+            method: "GET",
+        }).then(function (weatherInfo) {
+            // THE CURRENT DAY FORECAST
+            // Gets the results-today div and empties it every time a search is done
+            const resultsTodayEl = $("#results-today");
+            resultsTodayEl.empty();
 
-            // We then store the query URL in a variable using the lon/lat values
-            const queryURL =
-                'https://api.openweathermap.org/data/2.5/onecall?lat=' +
-                latitude +
-                '&lon=' +
-                longitude +
-                '&exclude=minutely,hourly&appid=' +
-                decodedApiKey;
+            // Create another div element to hold the city name and other info append to the results-today div
+            const cityEl = $(`<div class="row" id="city-details"></div>`);
+            resultsTodayEl.append(cityEl);
 
-            // And call the queryURL to get the weather infomation
-            $.ajax({
-                url: queryURL,
-                method: 'GET',
-            }).then(function (weatherInfo) {
-                console.log(weatherInfo)
-                // THE CURRENT DAY FORECAST
-                // Gets the results-today div and empties it every time a search is done
-                const resultsTodayEl = $('#results-today');
-                resultsTodayEl.empty();
+            // Create the HTML elements to show the city name, todays date and the weather icon
+            const cityName = $(`<h2 id="city-name">${cityCoords[0].name + ", " + cityCoords[0].state}</h2>`);
 
-                // Create another div element to hold the city name and other info append to the results-today div
-                const cityEl = $('<div></div>').attr('id', 'city-details');
-                cityEl.addClass('row');
-                resultsTodayEl.append(cityEl);
+            const todaysDate = $(`<p id="date">${moment().format("MMM Do, YYYY")}</p>`);
 
-                // Create the HTML elements to show the city name, todays date and the weather icon
-                const cityName = $('<h2></h2>').attr('id', 'city-name');
-                cityName.text(cityCoords[0].name + ", " + cityCoords[0].state);
-                const todaysDate = $('<p></p>').attr('id', 'date');
-                todaysDate.text(moment().format('MMM Do, YYYY'));
+            const todayEl = $(`<p>${"Today will be: "}</p>`);
 
-                const todayEl = $('<p></p>').text('Today will be: ');
-                const weatherIcon = $('<img>').attr('src', `https://openweathermap.org/img/wn/${weatherInfo.current.weather[0].icon}@4x.png`);
-                weatherIcon.addClass('weather-icon');
+            const weatherIcon = $(`<img src="https://openweathermap.org/img/wn/${weatherInfo.current.weather[0].icon}@4x.png" class="weather-icon" alt="weather icon">`);
 
-                // Append the HTML elements to the cityEl div
-                cityEl.append(cityName, todaysDate, todayEl, weatherIcon);
+            // Append the HTML elements to the cityEl div
+            cityEl.append(cityName, todaysDate, todayEl, weatherIcon);
+
+            // Div for the wind, humidity, temp and UV
+            const weatherDetailsEl = $(`<div id="weather-details" class="row"></div>`);
+            resultsTodayEl.append(weatherDetailsEl);
+
+            // Wind information
+            const windCol = $(`<div class="col"></div>`);
+            const todayWindLabelEl = $(`<p style="float: left; font-weight: bold">${"Wind speed: "}</p>`);
+            const todayWindEl = $(`<p style="float: right">${weatherInfo.current.wind_speed + " mph"}</p>`);
+            windCol.append(todayWindLabelEl, todayWindEl);
+
+            // Humidity information
+            const humidityCol = $(`<div class="col"></div>`);
+            const todayHumidLabel = $(`<p style="float: left; font-weight: bold">${"Humidity: "}</p>`);
+            const todayHumidityEl = $(`<p style="float: right">${weatherInfo.current.humidity + " %"}</p>`);
+            humidityCol.append(todayHumidLabel, todayHumidityEl);
+
+            // Temp information
+            const tempCol = $(`<div class="col"></div>`);
+            const todayTempLabelEl = $(`<p style="float: left; font-weight: bold">${"Temperature: "}</p>`);
+
+            // Had to convert the temp from kelvin to celcius
+            const todayTempEl = $(`<p style="float: right">${(weatherInfo.current.temp - 273.15).toFixed(0) + " °C"}</p>`);
+            tempCol.append(todayTempLabelEl, todayTempEl);
+
+            const uvCol = $(`<div class="col"></div>`);
+            const uvLabelEl = $(`<p style="float: left; font-weight: bold">${"UV index: "}</p>`);
+            const uvEl = $(`<p>${weatherInfo.current.uvi}</p>`);
+            // Conditional statements to allocate colour according to uv index
+            if (weatherInfo.current.uvi < 3) {
+                uvEl.attr("style", "float: right; color: white; background: green; border-radius: 3px");
+            } else if (weatherInfo.current.uvi < 7) {
+                uvEl.attr("style", "float: right; color: white; background: orange; border-radius: 3px");
+            } else {
+                uvEl.attr("style", "float: right; color: white; background: red; border-radius: 3px");
+            }
+            uvCol.append(uvLabelEl, uvEl);
+
+            weatherDetailsEl.append(windCol, humidityCol, tempCol, uvCol);
+
+            // THE 5 DAY FORECAST
+            const fiveDayEl = $("#five-day-forecast");
+            fiveDayEl.empty();
+
+            const resultsArea = $(`<div id="results-area" class="row row-cols-5"></div>`);
+            fiveDayEl.append(resultsArea);
+
+            // Starting for loop at 1 as index position 0 is current day already displayed
+            for (let i = 1; i <= 5; i++) {
+                const resultCard = $(`<div class="card col-lg-2 col-md-4 col-sm-12"></div>`);
+                const resultBody = $(`<div id="custom-card-body" class="card-body"></div>`);
+                resultCard.append(resultBody);
+
+                const dailyDate = moment.unix(weatherInfo.daily[i].dt);
+                const formattedDate = dailyDate.format("dddd, MMMM Do");
+                const titleEl = $(`<h4>${formattedDate}</h4>`);
+                resultBody.append(titleEl);
+
+                const iconImage = $(`<img src="https://openweathermap.org/img/wn/${weatherInfo.daily[i].weather[0].icon}@2x.png" class="mini-weather-icon">`);
+                resultBody.append(iconImage);
 
                 // Div for the wind, humidity, temp and UV
-                const weatherDetailsEl = $('<div></div>').attr('id', 'weather-details');
-                weatherDetailsEl.addClass('row');
-                resultsTodayEl.append(weatherDetailsEl);
+                const dailyWeatherDetailsEl = $(`<div id="daily-weather-details"></div>`);
+                resultBody.append(dailyWeatherDetailsEl);
 
                 // Wind information
-                const windCol = $('<div></div>').attr('class', 'col');
-                const todayWindLabelEl = $('<p></p>').text('Wind speed: ');
-                const todayWindEl = $('<p></p>').text(weatherInfo.current.wind_speed + ' mph');
-                todayWindLabelEl.attr('style', 'float: left; font-weight: bold');
-                todayWindEl.attr('style', 'float: right');
-                windCol.append(todayWindLabelEl, todayWindEl);
+                const windSpeedLabel = $(`<p style="font-weight: bold">${"Wind speed: "}</p>`);
+                const windSpeedEl = $(`<p>${weatherInfo.daily[i].wind_speed + " mph"}</p>`);
+                dailyWeatherDetailsEl.append(windSpeedLabel, windSpeedEl);
 
                 // Humidity information
-                const humidityCol = $('<div></div>').attr('class', 'col');
-                const todayHumidLabel = $('<p></p>').text('Humidity: ');
-                const todayHumidityEl = $('<p></p>').text(weatherInfo.current.humidity + ' %');
-                todayHumidLabel.attr('style', 'float: left; font-weight: bold');
-                todayHumidityEl.attr('style', 'float: right');
-                humidityCol.append(todayHumidLabel, todayHumidityEl);
+                const humidLabelEl = $(`<p style="font-weight: bold">${"Humidity: "}</p>`);
+                const humidityEl = $(`<p>${weatherInfo.daily[i].humidity + " %"}</p>`);
+                dailyWeatherDetailsEl.append(humidLabelEl, humidityEl);
 
                 // Temp information
-                const tempCol = $('<div></div>').attr('class', 'col');
-                const todayTempLabelEl = $('<p></p>').text('Temperature: ');
+                const tempLabelEl = $(`<p style="font-weight: bold">${"Temperature: "}</p>`);
+                const tempEl = $(`<p>${(weatherInfo.daily[i].temp.day - 273.15).toFixed(0) + " °C"}</p>`);
+                dailyWeatherDetailsEl.append(tempLabelEl, tempEl);
 
-                // Had to convert the temp from kelvin to celcius
-                const todayTempEl = $('<p></p>').text((weatherInfo.current.temp - 273.15).toFixed(0) + ' °C');
-                todayTempLabelEl.attr('style', 'float: left; font-weight: bold');
-                todayTempEl.attr('style', 'float: right');
-                tempCol.append(todayTempLabelEl, todayTempEl);
+                resultsArea.append(resultCard);
 
-                const uvCol = $('<div></div>').attr('class', 'col');
-                const uvLabelEl = $('<p></p>').text('UV index: ');
-                const uvEl = $('<p></p>').text(weatherInfo.current.uvi);
-                uvLabelEl.attr('style', 'float: left; font-weight: bold');
-                //conditional statements to allocate colour according to uv index
-                if (weatherInfo.current.uvi < 3) {
-                    uvEl.attr('style', 'float: right; color: white; background: green; border-radius: 3px');
-                } else if (weatherInfo.current.uvi < 7) {
-                    uvEl.attr('style', 'float: right; color: white; background: orange; border-radius: 3px');
-                } else {
-                    uvEl.attr('style', 'float: right; color: white; background: red; border-radius: 3px');
-                }
-                uvCol.append(uvLabelEl, uvEl);
+                $("#divider").removeClass("hide")
 
-                weatherDetailsEl.append(windCol, humidityCol, tempCol, uvCol);
+                // Removing the user input to avoid duplicate searches of the same term
+                $("#search-input").val("")
+            };
+        });
+    });
+};
 
-                // THE 5 DAY FORECAST
-                const fiveDayEl = $('#five-day-forecast');
-                fiveDayEl.empty();
+// When search button is clicked, the api will bring the data onto the screen
+$("#search-btn").on("click", function () {
+    let cityName = $("#search-input").val();
 
-                const resultsArea = $('<div></div>').attr('id', 'results-area');
-                resultsArea.addClass('row', 'row-cols-5')
-                fiveDayEl.append(resultsArea);
+    // If the input city is blank then an error modal will show
+    if (!cityName.trim()) {
+        $("#errorModal").modal("show")
+        return;
+    } else {
 
-                //starting for loop at 1 as index position 0 is current day already displayed
-                for (let i = 1; i <= 5; i++) {
-                    const resultCard = $('<div></div>').addClass('card col-lg-2 col-md-4 col-sm-12');
-                    const resultBody = $('<div></div>').addClass('card-body');
-                    resultBody.attr('id', 'custom-card-body');
-                    resultCard.append(resultBody);
+        let cityBtn = $(`<button class="btn btn-light btn-list" data-city="${cityName}">${cityName}</button>`);
 
-                    const dailyDate = moment.unix(weatherInfo.daily[i].dt);
-                    const formattedDate = dailyDate.format("dddd, MMMM Do");
-                    const titleEl = $('<h4></h4>').text(formattedDate);
-                    resultBody.append(titleEl);
+        $("#city-list").append(cityBtn);
 
-                    const iconImage = $('<img>').attr('src', `https://openweathermap.org/img/wn/${weatherInfo.daily[i].weather[0].icon}@2x.png`);
-                    iconImage.addClass('mini-weather-icon');
-                    resultBody.append(iconImage);
+        savedSearch.push(cityName);
 
-                    // Div for the wind, humidity, temp and UV
-                    const dailyWeatherDetailsEl = $('<div></div>').attr('id', 'daily-weather-details');
-                    //dailyWeatherDetailsEl.addClass('row');
-                    resultBody.append(dailyWeatherDetailsEl);
+        // Localstorage json.stringify to store the item
+        localStorage.setItem("ForecastHistory", JSON.stringify(savedSearch));
 
-                    // Wind information
-                    const windSpeedLabel = $('<p></p>').text('Wind speed: ');
-                    const windSpeedEl = $('<p></p>').text(weatherInfo.daily[i].wind_speed + ' mph');
-                    windSpeedLabel.attr('style', 'font-weight: bold');
-                    dailyWeatherDetailsEl.append(windSpeedLabel, windSpeedEl);
+        weatherDisplay(cityName)
+    };
+});
 
-                    // Humidity information
-                    const humidLabelEl = $('<p></p>').text('Humidity: ');
-                    const humidityEl = $('<p></p>').text(weatherInfo.daily[i].humidity + ' %');
-                    humidLabelEl.attr('style', 'font-weight: bold');
-                    dailyWeatherDetailsEl.append(humidLabelEl, humidityEl);
+// Clear button to clear the local storage
+$("#clear-btn").on("click", function () {
+    localStorage.clear()
+    location.reload()
+})
 
-                    // Temp information
-                    const tempLabelEl = $('<p></p>').text('Temperature: ');
-                    const tempEl = $('<p></p>').text((weatherInfo.daily[i].temp.day - 273.15).toFixed(0) + ' °C');
-                    tempLabelEl.attr('style', 'font-weight: bold');
-                    dailyWeatherDetailsEl.append(tempLabelEl, tempEl);
+// Generates API information that was saved in local storage to be recalled again.
+$("#cities-list").on("click", "button", function () {
+    let cityName = $(this).data("city");
 
-                    resultsArea.append(resultCard);
-
-                    $('#divider').removeClass('hide')
-                }
-            });
-        })
-
-    }
+    weatherDisplay(cityName);
 });

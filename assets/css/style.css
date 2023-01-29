@@ -7,11 +7,6 @@ p {
     margin: 0 !important;
 }
 
-#search-btn,
-#clear-btn {
-    margin-top: 10px;
-}
-
 .custom-jumbotron {
     background: linear-gradient(0deg, #ff00964d, #ff00964d), url(../images/Cloud-100s-1084px.svg);
     background-size: cover;
@@ -23,6 +18,12 @@ p {
     justify-content: center;
     margin-bottom: 15px;
 }
+
+#search-btn,
+#clear-btn {
+    margin-top: 10px;
+}
+
 
 .search-field {
     align-self: left;
@@ -155,4 +156,8 @@ input {
     border-radius: 6px;
     background-color: #4d002d62;
     color: #ffffff;
+}
+
+.btn-list {
+    margin-top: 5px!important;
 }
