@@ -1,0 +1,47 @@
+body {
+    font-family: 'Euclid Circular A', sans-serif !important;
+}
+
+p {
+    padding: 0;
+    margin: 0 !important;
+}
+
+#search-btn,
+#clear-btn {
+    margin-top: 10px;
+}
+
+.custom-jumbotron {
+    background:linear-gradient(0deg, #ff00964d, #ff00964d), url(../images/Cloud-100s-1084px.svg);
+    background-size:cover;
+    background-position: center;
+    color: white;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-field {
+    align-self: left;
+    margin: 20px;
+}
+
+.row {
+    justify-content: center;
+}
+
+.results {
+    align-self: flex-end;
+    float: right;
+}
+
+.card {
+    margin: 10px;
+}
+
+.custom-btn {
+    background-color: #4D002D!important;
+    color: white!important;
+}
