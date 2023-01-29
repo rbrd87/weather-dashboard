@@ -21,6 +21,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 15px;
 }
 
 .search-field {
@@ -29,7 +30,7 @@ p {
 }
 
 .row {
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .results {
@@ -44,7 +45,7 @@ input {
 
 .card {
     margin: 10px;
-    border-color: white!important;
+    border-color: #ffffff!important;
 }
 
 #results-today {
@@ -53,6 +54,16 @@ input {
 
 #weather-details {
     width: 65%
+}
+
+#five-day-forecast {
+   margin: 50px 0; 
+}
+
+#custom-card-body {
+    text-align: center;
+    padding: 0!important;
+    margin: 0!important;
 }
 
 #city-name {
@@ -86,11 +97,62 @@ input {
     margin-top: 10px;
 }
 
-.display-block {
-    width: 155px!important;
-    margin: -25px 0 -20px 0!important;
+.weather-icon {
+    width: max-content!important;
+    margin: -35px 0 -20px 0!important;
 }
+
+.mini-weather-icon {
+    width: 100px!important;
+    margin: -20px 0 -20px 0!important;
+}
+
 .col {
-    display: flex;
-    flex-direction: column;
+    display: flex!important;
+    flex-direction: column!important;
+}
+
+.custom-list {
+    list-style: none;
+    margin: 5px;
+}
+
+/* Shape Divider */
+.custom-shape-divider-bottom-1675017698 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1675017698 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 126px;
+}
+
+.custom-shape-divider-bottom-1675017698 .shape-fill {
+    fill: #4D002D;
+}
+
+.hide {
+    display: none
+}
+
+.footer {
+    background-color: #535353;
+}
+
+#sig {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    border-radius: 6px;
+    background-color: #4d002d62;
+    color: #ffffff;
 }
