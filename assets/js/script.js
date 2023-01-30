@@ -101,7 +101,7 @@ function weatherDisplay(city) {
             const fiveDayEl = $("#five-day-forecast");
             fiveDayEl.empty();
 
-            const resultsArea = $(`<div id="results-area" class="row row-cols-5"></div>`);
+            const resultsArea = $(`<div id="results-area" class="row"></div>`);
             fiveDayEl.append(resultsArea);
 
             // Starting for loop at 1 as index position 0 is current day already displayed
