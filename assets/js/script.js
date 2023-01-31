@@ -160,8 +160,21 @@ $("#search-btn").on("click", function () {
             $(this).find('.custom-btn').focus();
         });
         return;
-    } else {
+    } else if (savedSearch.length <= 5){
 
+        let cityBtn = $(`<button class="btn btn-light btn-list" data-city="${cityName}">${cityName}</button>`);
+
+        $("#city-list").append(cityBtn);
+
+        savedSearch.push(cityName);
+
+        // Localstorage json.stringify to store the item
+        localStorage.setItem("ForecastHistory", JSON.stringify(savedSearch));
+
+        weatherDisplay(cityName)
+    } else {
+        savedSearch.shift();
+        
         let cityBtn = $(`<button class="btn btn-light btn-list" data-city="${cityName}">${cityName}</button>`);
 
         $("#city-list").append(cityBtn);
