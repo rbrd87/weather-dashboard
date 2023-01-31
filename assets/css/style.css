@@ -1,3 +1,9 @@
+/* variables for repeating colors etc */
+:root {
+    --white: #ffffff;
+    --plum: #4D002D;
+}
+
 body {
     font-family: 'Euclid Circular A', sans-serif !important;
 }
@@ -16,7 +22,7 @@ input {
     background: linear-gradient(0deg, #ff00964d, #ff00964d), url(../images/Cloud-100s-1084px.svg);
     background-size: cover;
     background-position: center;
-    color: white;
+    color: var(--white);
     height: 300px;
     display: flex;
     align-items: center;
@@ -31,7 +37,7 @@ input {
     padding: 8px 15px;
     border-radius: 6px;
     background-color: #4d002d62;
-    color: #ffffff;
+    color: var(--white);
 }
 
 #search-btn,
@@ -40,22 +46,13 @@ input {
 }
 
 .custom-btn {
-    background-color: #4D002D !important;
-    color: white !important;
-}
-
-.searched-btns {
-    background-color: #4D002D !important;
-    color: white !important;
+    background-color: var(--plum) !important;
+    color: var(--white) !important;
 }
 
 .btn-list {
     margin-top: 5px !important;
-}
-
-.custom-list {
-    list-style: none;
-    margin: 5px;
+    text-transform: capitalize;
 }
 
 #results-today {
@@ -71,8 +68,8 @@ input {
 }
 
 .modal-header {
-    background-color: #4D002D;
-    color: white;
+    background-color: var(--plum);
+    color: var(--white);
 }
 
 #modalText {
@@ -90,7 +87,7 @@ input {
 
 .card {
     margin: 10px;
-    border-color: #ffffff !important;
+    border-color: var(--white) !important;
 }
 
 #custom-card-body {
@@ -125,4 +122,8 @@ input {
 
 .hide {
     display: none
+}
+
+footer i:hover {
+    color: var(--plum) !important;
 }
