@@ -155,6 +155,10 @@ $("#search-btn").on("click", function () {
     // If the input city is blank then an error modal will show
     if (!cityName.trim()) {
         $("#errorModal").modal("show")
+        // Added focus to the 'Okay' button so the user can close the alert modal with the enter key
+        $("#errorModal").on('shown.bs.modal', function(){
+            $(this).find('.custom-btn').focus();
+        });
         return;
     } else {
 
@@ -168,6 +172,14 @@ $("#search-btn").on("click", function () {
         localStorage.setItem("ForecastHistory", JSON.stringify(savedSearch));
 
         weatherDisplay(cityName)
+    };
+});
+
+// Added a keyup event listener so the user can enter a city and press enter on the keyboard instead of clicking the button
+$("#search-input").on("keyup", function (event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        $("#search-btn").click();
     };
 });
 
