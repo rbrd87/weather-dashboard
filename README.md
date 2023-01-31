@@ -35,9 +35,9 @@ The page is deployed on GitHub - [Click here](https://rbrd87.github.io/weather-d
 The repository of the project is also hosted on GitHub - [Click here](https://github.com/rbrd87/weather-dashboard)
 
 ## Demo / Screenshots
-Here is a demonstration of my code quiz
+Here is a screenshot of my weather dashboard
 
-![demo of weather dashboard](./assets/images/dashboard-demo.gif)
+![demo of weather dashboard](./assets/images/screenshot.jpg)
 
 And here is a small snippet of my code
 ![snippet of my code](./assets/images/code-snippet.jpg)
